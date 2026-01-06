@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Feast Formula</title>
+    <link rel="stylesheet" href="../../static/css/style.css">
+</head>
+
+<body style="background:var(--bg-light); display:flex; justify-content:center; align-items:center; height:100vh;">
+
+    <div class="card" style="width: 100%; max-width: 400px; padding: 2rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <span style="font-size: 3rem;">📝</span>
+            <h2 style="font-weight: 800; color: var(--slate-900);">Create Account</h2>
+            <p style="color: var(--slate-500);">Join Feast Formula today</p>
+        </div>
+
+        <form action="/auth/register" method="POST">
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" name="username" required placeholder="John Doe">
+            </div>
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" name="email" required placeholder="you@example.com">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" name="password" required placeholder="••••••••">
+            </div>
+            <div class="input-group">
+                <label>I am a...</label>
+                <select name="role"
+                    style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; background: white;">
+                    <option value="user">Customer (I want food)</option>
+                    <option value="owner">Restaurant Owner (I sell food)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="cta-btn full-width">Create Account</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
+            Already have an account? <a href="/auth/login" style="color: var(--primary); font-weight: bold;">Login</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Feast Formula</title>
+    <link rel="stylesheet" href="../../static/css/style.css">
+</head>
+
+<body style="background:var(--bg-light); display:flex; justify-content:center; align-items:center; height:100vh;">
+
+    <div class="card" style="width: 100%; max-width: 400px; padding: 2rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <span style="font-size: 3rem;">🍱</span>
+            <h2 style="font-weight: 800; color: var(--slate-900);">Welcome Back</h2>
+            <p style="color: var(--slate-500);">Login to access your Feast Formula account</p>
+        </div>
+
+        <form action="/auth/login" method="POST">
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" name="email" required placeholder="you@example.com">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" name="password" required placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="cta-btn full-width">Sign In</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
+            Don't have an account? <a href="/auth/register"
+                style="color: var(--primary); font-weight: bold;">Register</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

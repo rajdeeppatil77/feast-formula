@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Health Profile</title>
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: var(--bg-light);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header" style="display:flex; justify-content:space-between; align-items:center;">
+            <h1>❤️ My Health Profile</h1>
+            <div>
+                <a href="/" class="btn btn-primary">Browse Food</a>
+                <a href="/auth/logout" class="btn btn-outline">Logout</a>
+            </div>
+        </div>
+
+        <div class="grid" style="margin-top:2rem;">
+            <div class="card">
+                <h2>Update Vitals</h2>
+                <form action="/update-health" method="POST">
+                    <div class="input-group">
+                        <label>Age</label>
+                        <input type="number" name="age"
+                            value="{{ user.health_profile.age if user.health_profile else '' }}" required>
+                    </div>
+                    <div class="input-group">
+                        <label>BMI (Body Mass Index)</label>
+                        <input type="number" step="0.1" name="bmi"
+                            value="{{ user.health_profile.bmi if user.health_profile else '' }}" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Medical Conditions</label>
+                        <select name="conditions" style="width:100%; padding:0.5rem;">
+                            <option value="None">None</option>
+                            <option value="Diabetic">Diabetic</option>
+                            <option value="Heart Patient">Heart Patient</option>
+                            <option value="Obesity">Obesity</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Dietary Goal</label>
+                        <select name="diet_goal" style="width:100%; padding:0.5rem;">
+                            <option value="Maintain">Maintain Weight</option>
+                            <option value="Weight Loss">Weight Loss</option>
+                            <option value="Muscle Gain">Muscle Gain</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="cta-btn full-width">Update Profile</button>
+                    <p style="margin-top:1rem; font-size:0.9rem; color:#666;">
+                        ℹ️ Updating this will auto-filter recommended restaurants on your homepage.
+                    </p>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>📊 Your Stats</h2>
+                <div style="text-align:center; padding:2rem;">
+                    <h3>Calculated Health Score</h3>
+                    <div style="font-size:4rem; color:green; font-weight:bold;">85/100</div>
+                    <p>Based on your BMI and Diet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

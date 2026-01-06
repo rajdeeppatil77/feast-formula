@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: var(--bg-light);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header" style="display:flex; justify-content:space-between; align-items:center;">
+            <h1>🛡️ Admin Panel</h1>
+            <a href="/auth/logout" class="btn btn-outline">Logout</a>
+        </div>
+
+        <div class="grid" style="margin-top:2rem;">
+            <div class="card">
+                <h2>Pending Approvals</h2>
+                {% if pending %}
+                {% for rest in pending %}
+                <div
+                    style="border-bottom:1px solid #eee; padding:1rem 0; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <strong>{{ rest.name }}</strong><br>
+                        <small>{{ rest.cuisine }}</small>
+                    </div>
+                    <a href="/verify-restaurant/{{ rest.id }}" class="btn btn-primary" style="padding:5px 10px;">Verify
+                        ✅</a>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p style="color:green;">No pending approvals.</p>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>Total Users</h2>
+                <h1 style="font-size:3rem;">{{ users|length }}</h1>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feast Formula | Smart Food & Health AI</title>
+    <!-- INTERNAL CSS (No CDNs) -->
+    <link rel="stylesheet" href="static/css/style.css">
+    <!-- CHART JS FOR ADMIN (Optional, can be local if verified) -->
+    <!-- We will rely on simple CSS charts for offline robustness as planned -->
+</head>
+
+<body>
+    <!-- FORCE SERVER LOAD (Auto Redirect) -->
+    <script>
+        if (window.location.protocol === 'file:') {
+            document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#111;color:white;font-family:system-ui;"><h1>🚀 Redirecting to Feast Formula Server...</h1></div>';
+            window.location.href = "http://localhost:5001";
+        }
+    </script>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="brand">
+            <span style="font-size: 2rem;">🍱</span> FEAST FORMULA
+        </div>
+        <div class="nav-items" id="nav-menu">
+            <a href="/" class="nav-btn active" style="text-decoration:none;"><span class="icon">🏠</span> Home</a>
+            <a href="/user-dashboard" class="nav-btn" style="text-decoration:none;"><span class="icon">🩺</span> Health
+                Profile</a>
+            <div style="display:inline-block;" onclick="navigate('fraud')"><button class="nav-btn"><span
+                        class="icon">🛡️</span> Fraud Check</button></div>
+            <a href="/admin-dashboard" class="nav-btn" style="text-decoration:none;"><span class="icon">📊</span>
+                Admin</a>
+
+            <a href="/auth/login" class="nav-btn" style="text-decoration:none; color:var(--primary);">Login</a>
+
+            <button class="nav-btn" style="color: var(--primary);" onclick="toggleCart()"><span class="icon">🛒</span>
+                Cart (<span id="cart-count">0</span>)</button>
+        </div>
+    </nav>
+
+    <!-- CART DRAWER HTML -->
+    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <h2 style="margin:0;">My Cart</h2>
+            <button onclick="toggleCart()"
+                style="background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+        </div>
+        <div class="cart-body" id="cart-items-container">
+            <!-- Items go here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cart-total-price">₹0</span>
+            </div>
+            <button class="cta-btn full-width" onclick="checkout()">Checkout to Payment</button>
+        </div>
+    </div>
+
+    <!-- CONTENT PAGES -->
+    <main class="container">
+
+        <!-- 1. HOME / ORDERING PAGE -->
+        <div id="home" class="app-page">
+
+            <!-- Hero Banner -->
+            <div class="hero-banner">
+                <div class="hero-text">
+                    <h1>Craving Healthy?</h1>
+                    <p>Order delicious food tailored to your health needs. AI-powered smart recommendations.</p>
+                    <button class="cta-btn"
+                        onclick="document.getElementById('food-grid').scrollIntoView({behavior:'smooth'})">Explore
+                        Menu</button>
+                </div>
+                <div class="hero-img">
+                    <!-- Using Emoji for robust offline/no-image visual -->
+                    <div style="font-size: 8rem;">🥗</div>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="section-title">What's on your mind?</div>
+            <div class="category-scroller">
+                <div class="category-item">
+                    <div class="category-img"
+                        style="background:#e0f2f1; display:flex;align-items:center;justify-content:center;font-size:2rem;">
+                        🍕</div>
+                    <div class="category-name">Pizza</div>
+                </div>
+                <div class="category-item">
+                    <div class="category-img"
+                        style="background:#fff3e0; display:flex;align-items:center;justify-content:center;font-size:2rem;">
+                        🥗</div>
+                    <div class="category-name">Healthy</div>
+                </div>
+                <div class="category-item">
+                    <div class="category-img"
+                        style="background:#ffebee; display:flex;align-items:center;justify-content:center;font-size:2rem;">
+                        🍦</div>
+                    <div class="category-name">Dessert</div>
+                </div>
+                <div class="category-item">
+                    <div class="category-img"
+                        style="background:#e8eaf6; display:flex;align-items:center;justify-content:center;font-size:2rem;">
+                        🥘</div>
+                    <div class="category-name">Biryani</div>
+                </div>
+                <div class="category-item">
+                    <div class="category-img"
+                        style="background:#f3e5f5; display:flex;align-items:center;justify-content:center;font-size:2rem;">
+                        🍔</div>
+                    <div class="category-name">Burger</div>
+                </div>
+                <div class="category-item">
+                    <div class="category-img"
+                        style="background:#fffde7; display:flex;align-items:center;justify-content:center;font-size:2rem;">
+                        ☕</div>
+                    <div class="category-name">Coffee</div>
+                </div>
+            </div>
+
+            <br><br>
+
+            <!-- Food Grid -->
+            <div class="section-title" id="food-grid">Top Restaurants & Menu</div>
+            <div class="grid">
+                {% if restaurants %}
+                {% for rest in restaurants %}
+                {% for item in rest.menu_items %}
+                <!-- Item Card -->
+                <div class="food-card" data-id="{{ item.id }}" data-name="{{ item.name }}" data-price="{{ item.price }}"
+                    onclick="addToCart(this.dataset.id, this.dataset.name, parseFloat(this.dataset.price))">
+                    <div class="card-img-container">
+                        <!-- Placeholder Image Logic -->
+                        <div
+                            style="width:100%; height:150px; background:#eee; display:flex; align-items:center; justify-content:center; font-size:3rem;">
+                            {% if 'Biryani' in item.name %}🥘{% elif 'Salad' in item.name %}🥗{% elif 'Cake' in
+                            item.name %}🍰{% else %}🍽️{% endif %}
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-name">{{ item.name }}</div>
+
+                        <!-- AI PERSONALIZATION WARNING -->
+                        {% if health_warnings and item.id in health_warnings %}
+                        <div
+                            style="background:#fee2e2; color:#b91c1c; padding:4px 8px; font-size:0.75rem; border-radius:4px; margin-bottom:5px; border:1px solid #fca5a5;">
+                            {{ health_warnings[item.id] }}
+                        </div>
+                        {% endif %}
+
+                        <div class="card-meta">
+                            <div class="card-meta">
+                                <span>{{ rest.name }}</span>
+                                <span>₹{{ item.price }}</span>
+                            </div>
+                            <div class="rating-badge">
+                                {{ item.health_tags }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endfor %}
+                    {% else %}
+                    <p style="text-align:center; grid-column: 1/-1;">No restaurants found. Run seeder!</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- 2. HEALTH AI PAGE -->
+            <div id="health" class="app-page hidden">
+                <div class="section-title">🩺 AI Health Analysis</div>
+
+                <div class="ai-container">
+                    <div>
+                        <p style="margin-bottom:2rem; color:#666;">Our Machine Learning Model (RandomForest) analyzes
+                            your
+                            biometrics to predict potential health risks, customizing your food feed.</p>
+
+                        <div class="form-group">
+                            <label class="form-label">Age (Years)</label>
+                            <input type="number" id="age" class="form-input" value="25" placeholder="e.g. 25">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">BMI (Body Mass Index)</label>
+                            <input type="number" id="bmi" class="form-input" value="22" placeholder="e.g. 24.5">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Daily Sugar Intake (grams)</label>
+                            <input type="range" id="sugar" class="full-width" min="1" max="100" value="20"
+                                oninput="this.nextElementSibling.innerText = this.value + 'g'">
+                            <span style="font-weight:bold; color:var(--primary);">20g</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Exercise Hours / Week</label>
+                            <input type="range" id="exercise" class="full-width" min="0" max="14" value="5"
+                                oninput="this.nextElementSibling.innerText = this.value + ' hrs'">
+                            <span style="font-weight:bold; color:var(--primary);">5 hrs</span>
+                        </div>
+
+                        <button id="predict-btn" class="cta-btn full-width" onclick="predictHealth()">Analyze Health
+                            Now</button>
+                    </div>
+
+                    <div class="ai-result-box hidden" id="health-result">
+                        <div style="font-size:4rem; margin-bottom:1rem;">📋</div>
+                        <h3>AI Prediction Result</h3>
+                        <div class="result-value" id="health-text">Healthy</div>
+                        <p style="font-size:0.9rem; color:#777;">Based on 85% accuracy model</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. FRAUD PAGE -->
+            <div id="fraud" class="app-page hidden">
+                <div class="section-title">🛡️ Secure Payment Gateway</div>
+                <div
+                    style="background: white; padding: 2rem; border-radius: 20px; max-width: 600px; margin: 0 auto; box-shadow: var(--shadow-card);">
+                    <div style="text-align:center; margin-bottom:2rem;">
+                        <span style="font-size:3rem;">🔒</span>
+                        <h3>Fraud Detection System</h3>
+                        <p>Real-time transaction monitoring using Logistic Regression Logic.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Enter Transaction Amount (₹)</label>
+                        <input type="number" id="trans-amount" class="form-input"
+                            placeholder="Try 50000 for danger alert..." value="500">
+                    </div>
+
+                    <button class="cta-btn full-width" style="background:#1e293b;" onclick="detectFraud()">Simulate
+                        Pay</button>
+
+                    <div id="fraud-loader" class="hidden" style="margin-top:2rem; text-align:center; color:#666;">
+                        Processing... AI Scanning...
+                    </div>
+
+                    <div id="fraud-result" class="hidden" style="margin-top:2rem;"></div>
+                </div>
+            </div>
+
+            <!-- 4. ADMIN PAGE -->
+            <div id="admin" class="app-page hidden">
+                <div class="section-title">📊 Admin Dashboard</div>
+
+                <div class="grid">
+                    <div class="food-card" style="padding:2rem;">
+                        <h3>Total Orders</h3>
+                        <h1 style="color:url(--primary); font-size:3rem; margin:10px 0;">1,284</h1>
+                        <span style="color:green;">+12% from yesterday</span>
+                    </div>
+                    <div class="food-card" style="padding:2rem;">
+                        <h3>Revenue</h3>
+                        <h1 style="color:#111; font-size:3rem; margin:10px 0;">₹8.5L</h1>
+                        <span style="color:green;">+5% from last month</span>
+                    </div>
+                    <div class="food-card" style="padding:2rem;">
+                        <h3>Fraud Attempts</h3>
+                        <h1 style="color:red; font-size:3rem; margin:10px 0;">23</h1>
+                        <span style="color:red;">Blocked by AI</span>
+                    </div>
+                </div>
+
+                <br><br>
+                <h3>Live Health Data</h3>
+                <div style="background:white; padding:2rem; border-radius:16px; margin-top:1rem;">
+                    <!-- CSS Chart -->
+                    <div
+                        style="display:flex; justify-content:space-around; align-items:flex-end; height:200px; padding-bottom:10px; border-bottom:1px solid #eee;">
+                        <div
+                            style="width:50px; background:#48c479; height:60%; border-radius:8px 8px 0 0; position:relative;">
+                            <span style="position:absolute; top:-25px; left:10px; font-weight:bold;">60%</span>
+                        </div>
+                        <div
+                            style="width:50px; background:#f59e0b; height:25%; border-radius:8px 8px 0 0; position:relative;">
+                            <span style="position:absolute; top:-25px; left:10px; font-weight:bold;">25%</span>
+                        </div>
+                        <div
+                            style="width:50px; background:#ef4444; height:15%; border-radius:8px 8px 0 0; position:relative;">
+                            <span style="position:absolute; top:-25px; left:10px; font-weight:bold;">15%</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:space-around; margin-top:10px; font-weight:bold;">
+                        <span>Healthy</span>
+                        <span>Obesity</span>
+                        <span>Diabetic</span>
+                    </div>
+                </div>
+            </div>
+
+    </main>
+
+    <footer>
+        <div class="footer-logo">FEAST FORMULA</div>
+        <p>© Feast Formula. All rights reserved.</p>
+        <p>Built with Flask + Vanilla JS + ML Models</p>
+    </footer>
+
+    <!-- MAIN LOGIC -->
+    <script src="static/js/main.js"></script>
+</body>
+
+</html>

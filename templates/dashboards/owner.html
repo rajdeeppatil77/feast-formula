@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Restaurant Owner Dashboard</title>
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: var(--bg-light);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header"
+            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+            <h1>🧑‍🍳 Owner Dashboard</h1>
+            <a href="/auth/logout" class="btn btn-outline">Logout</a>
+        </div>
+
+        {% if not restaurant %}
+        <div class="card">
+            <h2>Step 1: Create Your Restaurant</h2>
+            <form action="/add-restaurant" method="POST">
+                <input type="text" name="name" placeholder="Restaurant Name" required class="input">
+                <input type="text" name="cuisine" placeholder="Cuisine (e.g. Italian)" required class="input">
+                <button type="submit" class="cta-btn">Create Restaurant</button>
+            </form>
+        </div>
+        {% else %}
+
+        <div class="grid" style="grid-template-columns: 1fr 2fr; gap: 2rem;">
+            <!-- Restaurant Info -->
+            <div class="card">
+                <h2>🏠 {{ restaurant.name }}</h2>
+                <p>Status: <span class="badge {{ 'bg-green' if restaurant.is_verified else 'bg-orange' }}">
+                        {{ 'Verified' if restaurant.is_verified else 'Pending Approval' }}
+                    </span></p>
+                <p>Cuisine: {{ restaurant.cuisine }}</p>
+            </div>
+
+            <!-- Add Dish -->
+            <div class="card">
+                <h2>🍲 Add New Dish</h2>
+                <form action="/add-dish" method="POST">
+                    <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <input type="text" name="name" placeholder="Dish Name" required class="input">
+                        <input type="number" name="price" placeholder="Price (₹)" required class="input">
+                    </div>
+                    <select name="category" class="input" style="width:100%; margin: 1rem 0;">
+                        <option value="Main Course">Main Course</option>
+                        <option value="Starters">Starters</option>
+                        <option value="Dessert">Dessert</option>
+                        <option value="Beverage">Beverage</option>
+                    </select>
+                    <textarea name="description" placeholder="Description (Ingredients etc.)" class="input"
+                        style="width:100%"></textarea>
+
+                    <button type="submit" class="cta-btn full-width">Add to Menu</button>
+                    <p style="font-size:0.8rem; color:#666; margin-top:10px;">* AI will automatically tag this dish for
+                        health suitability.</p>
+                </form>
+            </div>
+        </div>
+
+        <h3 class="section-title">📜 Current Menu ({{ restaurant.menu_items|length }})</h3>
+        <div class="grid">
+            {% for item in restaurant.menu_items %}
+            <div class="food-card">
+                <div class="card-info">
+                    <h4>{{ item.name }}</h4>
+                    <p>₹{{ item.price }}</p>
+                    <span class="badge">{{ item.category }}</span>
+                    <p style="font-size:0.8rem; color:green;">Health Tags: {{ item.health_tags }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% endif %}
+    </div>
+</body>
+
+</html>

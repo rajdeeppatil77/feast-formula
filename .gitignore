@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+.DS_Store
+
+# Database
+*.db
+instance/
+backend/instance/
+
+# IDE
+.vscode/
+.idea/
+
+# Flask
+.flask_run_pid
+
+# App Data
+brain/
