@@ -1,44 +1,39 @@
-# FEAST FORMULA 🍽️
-**AI-Powered Smart Food Ordering & Health Prediction System**
+# Feast Formula 🍔
 
-## 🚀 Quick Start (Demo)
+A modern, premium food delivery website built with Next.js, Tailwind CSS, and Framer Motion.
 
-I have created an automatic script to set up and run everything for you.
+## Features
 
-1.  **Open Terminal** in this folder.
-2.  **Run the Demo Script**:
+- **Modern UI**: Clean, responsive, and aesthetic design similar to Swiggy/Zomato.
+- **Hero Section**: immersive 3D-style overlapping image layout.
+- **Shop Page**: Category filtering and smooth transitions.
+- **Cart System**: Fully functional cart with add/remove/quantity controls.
+- **Animations**: Powered by Framer Motion for a premium feel.
+
+## Tech Stack
+
+- **Framework**: [Next.js 14 (App Router)](https://nextjs.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+
+## Getting Started
+
+1.  **Install dependencies**:
     ```bash
-    ./run_demo.sh
-    ```
-    *(This will install dependencies, train models, and start the website automatically)*
-
-3.  **Open Browser**: `http://localhost:5000`
-
----
-
-## 🛠 Manual Setup
-If you prefer identifying commands manually:
-
-1.  **Install Requirements** (Use `pip3` on Mac):
-    ```bash
-    pip3 install -r requirements.txt
-    ```
-
-2.  **Train AI Models**:
-    ```bash
-    python3 backend/ml/train_models.py
+    npm install
     ```
 
-3.  **Run Application**:
+2.  **Run the development server**:
     ```bash
-    python3 backend/app.py
+    npm run dev
     ```
 
-## 📂 Project Structure
--   `backend/` - Flask Server & ML Models
--   `templates/` - Frontend UI (React/HTML)
--   `docs/` - Final Year Project Report & Diagrams
--   `run_demo.sh` - Automatic Launcher
+3.  Open [http://localhost:3000](http://localhost:3000) with your browser.
 
----
-**Created for Final Year Engineering Project.**
+## Project Structure
+
+- `app/`: Next.js App Router pages and layouts.
+- `components/`: Reusable UI components (Navbar, Hero, FoodCard, etc.).
+- `context/`: React Context for state management (Cart).
+- `lib/`: Utility functions and dummy data.
