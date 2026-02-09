@@ -29,7 +29,7 @@ A modern, premium food delivery website built with Next.js, Tailwind CSS, and Fr
     npm run dev
     ```
 
-3.  Open [http://localhost:3000](http://localhost:3000) with your browser.
+3.  Open [http://localhost:3000](http://localhost:3001) with your browser.
 
 ## Project Structure
 
